@@ -1,0 +1,22 @@
+name: Gitleaks Scan
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Instalar Gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+          chmod +x gitleaks
+          sudo mv gitleaks /usr/local/bin/
+
+      - name: 🔍 Ejecutar Gitleaks
+        run: |
+          gitleaks detect --no-banner --exit-code 1 || echo "❌ Fugas detectadas por Gitleaks"
